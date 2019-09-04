@@ -16,16 +16,12 @@ class Albums extends StatefulWidget {
 
 class _AlbumsState extends State<Albums> with AutomaticKeepAliveClientMixin {
   List<AlbumInfo> albums;
-  AlbumInfo selectedAlbum;
-  //PageController _pageController;
   bool isLoading;
   List<SongInfo> songs;
   @override
   void initState() {
     isLoading = false;
-    //_pageController = PageController();
     albums = widget.albums;
-    selectedAlbum = albums[0];
     songs = [];
     super.initState();
   }
@@ -36,42 +32,64 @@ class _AlbumsState extends State<Albums> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Stack(
-      children: <Widget>[
-        CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              automaticallyImplyLeading: false,
-              backgroundColor: darkTheme,
-              floating: true,
-              title: const Text("Albums",
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(
-                      color: marble,
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold)),
+    if (Provider.of<AudioData>(context).albums.length == 0) {
+      return CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: darkTheme,
+            floating: true,
+            title: const Text("Albums",
+                textAlign: TextAlign.left,
+                style: const TextStyle(
+                    color: marble,
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.bold)),
+          ),
+          SliverFillRemaining(
+            child: Center(
+              child: Text("No Albums Found", style: listText),
             ),
-            SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1,
-                  mainAxisSpacing: 15,
-                  crossAxisSpacing: 15),
-              delegate: SliverChildBuilderDelegate(
-                  (context, index) => _getGrid(index),
-                  childCount: albums.length),
-            )
-          ],
-        ),
-        isLoading
-            ? const Align(
-                alignment: Alignment.center,
-                child:
-                    const CircularProgressIndicator(backgroundColor: darkTheme),
+          )
+        ],
+      );
+    } else
+      return Stack(
+        children: <Widget>[
+          CustomScrollView(
+            slivers: <Widget>[
+              SliverAppBar(
+                automaticallyImplyLeading: false,
+                backgroundColor: darkTheme,
+                floating: true,
+                title: const Text("Albums",
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                        color: marble,
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.bold)),
+              ),
+              SliverGrid(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 1,
+                    mainAxisSpacing: 15,
+                    crossAxisSpacing: 15),
+                delegate: SliverChildBuilderDelegate(
+                    (context, index) => _getGrid(index),
+                    childCount: albums.length),
               )
-            : const SizedBox(width: 0, height: 0)
-      ],
-    );
+            ],
+          ),
+          isLoading
+              ? const Align(
+                  alignment: Alignment.center,
+                  child: const CircularProgressIndicator(
+                      backgroundColor: darkTheme),
+                )
+              : const SizedBox(width: 0, height: 0)
+        ],
+      );
   }
 
   Image getImage(index) {

@@ -30,34 +30,58 @@ class _TracksState extends State<Tracks> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return CustomScrollView(
-      slivers: <Widget>[
-        SliverAppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: darkTheme,
-          floating: true,
-          title: const Text("Tracks",
-              textAlign: TextAlign.left,
-              style: const TextStyle(
-                  color: marble, fontSize: 25.0, fontWeight: FontWeight.bold)),
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) => CustomExpansionTile(
-                  onTap: () {
-                    Provider.of<AudioPlayerInfo>(context)
-                        .setCurrentSongList(songs, "Tracks");
-                    Provider.of<AudioPlayerInfo>(context).currentSong = index;
-                    Provider.of<AudioPlayerInfo>(context).play();
-                  },
-                  song: songs[index],
-                  addToPlaylist: () => showPlaylistsDialog(songs[index]),
-                ),
-            childCount: songs.length,
+    if (Provider.of<AudioData>(context).songs.length == 0) {
+      return CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: darkTheme,
+            floating: true,
+            title: const Text("Tracks",
+                textAlign: TextAlign.left,
+                style: const TextStyle(
+                    color: marble,
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.bold)),
           ),
-        )
-      ],
-    );
+          SliverFillRemaining(
+            child: Center(
+              child: Text("No Songs Found", style: listText),
+            ),
+          )
+        ],
+      );
+    } else
+      return CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: darkTheme,
+            floating: true,
+            title: const Text("Tracks",
+                textAlign: TextAlign.left,
+                style: const TextStyle(
+                    color: marble,
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.bold)),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => CustomExpansionTile(
+                    onTap: () {
+                      Provider.of<AudioPlayerInfo>(context)
+                          .setCurrentSongList(songs, "Tracks");
+                      Provider.of<AudioPlayerInfo>(context).currentSong = index;
+                      Provider.of<AudioPlayerInfo>(context).play();
+                    },
+                    song: songs[index],
+                    addToPlaylist: () => showPlaylistsDialog(songs[index]),
+                  ),
+              childCount: songs.length,
+            ),
+          )
+        ],
+      );
   }
 
   void showPlaylistsDialog(SongInfo song) {
@@ -105,7 +129,9 @@ class _TracksState extends State<Tracks> with AutomaticKeepAliveClientMixin {
       ));
     else {
       int index = Provider.of<AudioData>(context).playlists.indexOf(playlist);
-      await Provider.of<AudioData>(context).playlists[index].addSong(song: song);
+      await Provider.of<AudioData>(context)
+          .playlists[index]
+          .addSong(song: song);
       Provider.of<AudioData>(context).refresh();
       Scaffold.of(context).showSnackBar(SnackBar(
         duration: Duration(milliseconds: 1500),

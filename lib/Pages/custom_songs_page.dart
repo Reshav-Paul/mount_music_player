@@ -4,7 +4,6 @@ import 'dart:io';
 import '../ui_colors.dart';
 import 'package:flutter_audio_query/flutter_audio_query.dart';
 
-
 class CustomSongsPage extends StatefulWidget {
   //final PageController pageController;
   final String displayType;
@@ -35,7 +34,13 @@ class _CustomSongsPageState extends State<CustomSongsPage> {
             backgroundColor: darkTheme,
             expandedHeight: MediaQuery.of(context).size.width,
             flexibleSpace: FlexibleSpaceBar(
-              background: getImage(widget.songs[0].albumArtwork),
+              background: Stack(
+                fit: StackFit.expand,
+                children: <Widget>[
+                  Image.asset("assets/images/default_album_art.png"),
+                  getImage(widget.songs[0].albumArtwork)
+                ],
+              ),
             ),
             leading: IconButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -47,10 +52,12 @@ class _CustomSongsPageState extends State<CustomSongsPage> {
             title: Chip(
               backgroundColor: const Color(0xff303030),
               label: Text(
-                  widget.displayType == "Album"
-                      ? widget.songs[0].album
-                      : widget.songs[0].artist,
-                  style: listText, overflow: TextOverflow.ellipsis,),
+                widget.displayType == "Album"
+                    ? widget.songs[0].album
+                    : widget.songs[0].artist,
+                style: listText,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ),
           SliverList(
@@ -71,10 +78,15 @@ class _CustomSongsPageState extends State<CustomSongsPage> {
     );
   }
 
-  Image getImage(String path) => path != null
-      ? Image.file(
-          File(path),
-          fit: BoxFit.fill,
-        )
-      : Image.asset("assets/images/default_album_art.png");
+  Image getImage(path) {
+    Image image;
+    try {
+      image = path != null
+          ? Image.file(File(path), fit: BoxFit.fill)
+          : Image.asset("assets/images/default_album_art.png");
+    } on Error {
+      print("Error");
+    }
+    return image;
+  }
 }

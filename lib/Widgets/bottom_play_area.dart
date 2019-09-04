@@ -118,7 +118,7 @@ class _BottomPlayAreaState extends State<BottomPlayArea>
           SizedBox(height: 10.0),
           Padding(
             padding: const EdgeInsets.only(right: 16.0, left: 8.0),
-            child: Text(song.title,
+            child: Text(song != null? song.title : "No Song",
                 style: TextStyle(color: marble, fontSize: 12),
                 overflow: TextOverflow.ellipsis),
           ),

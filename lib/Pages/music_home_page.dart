@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:provider/provider.dart';
 
 import 'package:mount_music_player/ui_colors.dart';
@@ -53,7 +54,7 @@ class _MusicHomePageState extends State<MusicHomePage>
       }
       return ChangeNotifierProvider(
         builder: (context) => AudioPlayerInfo(
-            currentPlayingSong: songs[0], currentPlayingList: songs),
+            currentPlayingSong: songs.length > 0? songs[0] : null, currentPlayingList: songs),
         child: Scaffold(
           backgroundColor: darkTheme,
           appBar: null,

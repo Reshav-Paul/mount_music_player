@@ -77,6 +77,7 @@ class AudioPlayerInfo with ChangeNotifier {
   }
 
   set currentSong(int index) {
+    if (currentPlayingSong == null) return;
     if (currentPlayingList.isNotEmpty) {
       currentIndex = index;
       currentPlayingSong = currentPlayingList[index];
@@ -90,6 +91,7 @@ class AudioPlayerInfo with ChangeNotifier {
   }
 
   void setCurrentSongList(List<SongInfo> songs, String page) {
+    if (currentPlayingSong == null) return;
     if (currentPage == page)
       return;
     else {
@@ -101,6 +103,7 @@ class AudioPlayerInfo with ChangeNotifier {
   }
 
   void skipNext() {
+    if (currentPlayingSong == null) return;
     if (currentPlayingList.isNotEmpty) {
       currentIndex = (currentIndex + 1) % currentPlayingList.length;
       currentSong = currentIndex;
@@ -110,6 +113,7 @@ class AudioPlayerInfo with ChangeNotifier {
   }
 
   void skipPrevious() {
+    if (currentPlayingSong == null) return;
     if (currentPlayingList.isNotEmpty) {
       currentIndex =
           currentIndex == 0 ? currentPlayingList.length - 1 : currentIndex - 1;
@@ -120,22 +124,26 @@ class AudioPlayerInfo with ChangeNotifier {
   }
 
   void play() async {
+    if (currentPlayingSong == null) return;
     audioPlayer.state = AudioPlayerState.PLAYING;
     await audioPlayer.play(currentPlayingSong.filePath, isLocal: true);
     notifyListeners();
   }
 
   void pause() async {
+    if (currentPlayingSong == null) return;
     audioPlayer.state = AudioPlayerState.PAUSED;
     await audioPlayer.pause();
     notifyListeners();
   }
 
   void resume() async {
+    if (currentPlayingSong == null) return;
     play();
   }
 
   void seekForward(){
+    if (currentPlayingSong == null) return;
     if(shouldDisplayProgress){
     double forwardSkip = double.parse(currentPlayingSong.duration) * (durationPlayedPercent + 0.0013);
     Duration duration = new Duration(milliseconds: forwardSkip.toInt());
@@ -146,6 +154,7 @@ class AudioPlayerInfo with ChangeNotifier {
   }
 
   void seekBackward(){
+    if (currentPlayingSong == null) return;
     if(shouldDisplayProgress){
     double backwardSkip = double.parse(currentPlayingSong.duration) * (durationPlayedPercent - 0.0013);
     Duration duration = new Duration(milliseconds: backwardSkip.toInt());

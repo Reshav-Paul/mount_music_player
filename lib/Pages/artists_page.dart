@@ -46,49 +46,71 @@ class _ArtistsState extends State<Artists> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     super.build(context);
     _screenSize = MediaQuery.of(context).size;
-    return Stack(
-      children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            AppBar(
-              backgroundColor: darkTheme,
-              title: const Text(
-                "Artists",
+    if (Provider.of<AudioData>(context).artists.length == 0) {
+      return CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: darkTheme,
+            floating: true,
+            title: const Text("Artsists",
                 textAlign: TextAlign.left,
                 style: const TextStyle(
-                  color: marble,
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.bold,
+                    color: marble,
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.bold)),
+          ),
+          SliverFillRemaining(
+            child: Center(
+              child: Text("No Artists Found", style: listText),
+            ),
+          )
+        ],
+      );
+    } else
+      return Stack(
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              AppBar(
+                backgroundColor: darkTheme,
+                title: const Text(
+                  "Artists",
+                  textAlign: TextAlign.left,
+                  style: const TextStyle(
+                    color: marble,
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            Container(
-              height: _screenSize.height * 0.6,
-              width: _screenSize.width,
-              child: PageView.builder(
-                pageSnapping: false,
-                controller: _pageController,
-                itemCount: artists.length,
-                itemBuilder: (context, index) {
-                  bool active = _currentPage == index;
-                  return getPage(active, index);
-                },
-                onPageChanged: (int newPage) =>
-                    setState(() => _currentPage = newPage),
+              Container(
+                height: _screenSize.height * 0.6,
+                width: _screenSize.width,
+                child: PageView.builder(
+                  pageSnapping: false,
+                  controller: _pageController,
+                  itemCount: artists.length,
+                  itemBuilder: (context, index) {
+                    bool active = _currentPage == index;
+                    return getPage(active, index);
+                  },
+                  onPageChanged: (int newPage) =>
+                      setState(() => _currentPage = newPage),
+                ),
               ),
-            ),
-          ],
-        ),
-        isLoading
-            ? const Align(
-                alignment: Alignment.center,
-                child:
-                    const CircularProgressIndicator(backgroundColor: darkTheme),
-              )
-            : const SizedBox(width: 0, height: 0)
-      ],
-    );
+            ],
+          ),
+          isLoading
+              ? const Align(
+                  alignment: Alignment.center,
+                  child: const CircularProgressIndicator(
+                      backgroundColor: darkTheme),
+                )
+              : const SizedBox(width: 0, height: 0)
+        ],
+      );
   }
 
   AnimatedBuilder getPage(bool active, int index) {
@@ -155,7 +177,8 @@ class _ArtistsState extends State<Artists> with AutomaticKeepAliveClientMixin {
             child: IconButton(
               onPressed: () async {
                 await getSongs(artists[index]);
-                Provider.of<AudioPlayerInfo>(context).setCurrentSongList(songs, songs[0].artist);
+                Provider.of<AudioPlayerInfo>(context)
+                    .setCurrentSongList(songs, songs[0].artist);
                 Provider.of<AudioPlayerInfo>(context).play();
               },
               icon: const Icon(Icons.play_arrow, size: 36, color: primaryColor),

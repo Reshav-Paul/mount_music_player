@@ -43,7 +43,10 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
     if (!widget._expansionController.isAnimating || songs.isEmpty) {
       songs = Provider.of<AudioPlayerInfo>(context).currentPlayingList;
       currentIndex = Provider.of<AudioPlayerInfo>(context).currentIndex;
-      song = songs[currentIndex];
+      if(songs.length > 0)
+        song = songs[currentIndex];
+      else
+        song = null;
     }
 
     return WillPopScope(
@@ -68,7 +71,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
             child: RotatedBox(
               quarterTurns: 1,
               child: Text(
-                song.artist,
+                song != null? song.artist : "No Artist",
                 style: const TextStyle(color: Colors.white70, fontSize: 25),
               ),
             ),
@@ -80,7 +83,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
           PlayControls(widget._animationController, songs.length),
           Align(
               alignment: Alignment.bottomLeft,
-              child: SeekBar(songs.length, song.duration))
+              child: SeekBar(songs.length, song != null? song.duration : "0"))
         ],
       ),
     );
@@ -137,7 +140,7 @@ class _MainDisplayState extends State<MainDisplay> {
                 child: PageView.builder(
                   controller: Provider.of<AudioPlayerInfo>(context)
                       .musicScreenPageController,
-                  itemCount: widget.songs.length,
+                  itemCount: widget.songs.length != 0? widget.songs.length : 1,
                   onPageChanged: (int page) {
                     setState(() {
                       Provider.of<AudioPlayerInfo>(context).currentSong = page;
@@ -148,7 +151,7 @@ class _MainDisplayState extends State<MainDisplay> {
                       fit: StackFit.expand,
                       children: <Widget>[
                         Image.asset("assets/images/default_album_art.png"),
-                        _getImage(widget.songs[index].albumArtwork)
+                        widget.songs.length > 0? _getImage(widget.songs[index].albumArtwork) : SizedBox()
                       ],
                     );
                   },
@@ -160,7 +163,7 @@ class _MainDisplayState extends State<MainDisplay> {
             flex: 2,
             child: Center(
               child: Text(
-                Provider.of<AudioPlayerInfo>(context).currentPlayingSong.title,
+                widget.songs.length > 0? Provider.of<AudioPlayerInfo>(context).currentPlayingSong.title : "No Song Title",
                 style: const TextStyle(fontSize: 20),
                 textAlign: TextAlign.center,
               ),
@@ -168,7 +171,7 @@ class _MainDisplayState extends State<MainDisplay> {
           ),
           Expanded(
             child: Text(
-              Provider.of<AudioPlayerInfo>(context).currentPlayingSong.album,
+              widget.songs.length > 0? Provider.of<AudioPlayerInfo>(context).currentPlayingSong.album : "No Song Title",
               style:
                   TextStyle(fontSize: 14, color: Colors.black.withOpacity(0.7)),
               textAlign: TextAlign.center,
