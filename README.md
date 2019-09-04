@@ -35,6 +35,7 @@ A beautiful carousel with pop up effect scrolling
 
 Screenshots:
 
+<img src="screenshots/Screenshot_5.png" alt="screenshot 5" width="400">
 
 <img src="screenshots/Screenshot_1.png" alt="screenshot 1" width="400">
 
@@ -44,4 +45,3 @@ Screenshots:
 
 <img src="screenshots/Screenshot_4.png" alt="screenshot 4" width="400">
 
-<img src="screenshots/Screenshot_5.png" alt="screenshot 5" width="400">
