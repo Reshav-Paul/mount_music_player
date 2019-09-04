@@ -3,6 +3,8 @@
 Built With Flutter SDK
 #### Dark Material Design
 
+##### Music shown in the following screenshots is from www.bensound.com
+
 ## Packages used:
 
 flutter_audio_query
