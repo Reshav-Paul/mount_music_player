@@ -32,3 +32,16 @@ A music player screen which animates into view when the bottom control
 area is tapped or dragged upwards
   
 A beautiful carousel with pop up effect scrolling
+
+Screenshots:
+
+
+<img src="screenshots/Screenshot_1.png" alt="screenshot 1" width="400">
+
+<img src="screenshots/Screenshot_2.png" alt="screenshot 2" width="400">
+
+<img src="screenshots/Screenshot_3.png" alt="screenshot 3" width="400">
+
+<img src="screenshots/Screenshot_4.png" alt="screenshot 4" width="400">
+
+<img src="screenshots/Screenshot_5.png" alt="screenshot 5" width="400">
